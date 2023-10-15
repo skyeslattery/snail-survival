@@ -1,0 +1,20 @@
+{
+  "name": "Snail Survival",
+  "version": "1.0.0",
+  "description": "Run away from diving birds!",
+  "manifest_version": 3,
+  "author": "Skye Slattery",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "icon128.png",
+    "default_title": "Snail Survival"
+  },
+  "permissions": [
+    "activeTab"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
