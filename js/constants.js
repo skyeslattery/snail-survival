@@ -25,3 +25,8 @@ export const DASH_COOLDOWN = 10000;
 export const SHIELD_COOLDOWN = 30000;
 export const DASH_DURATION = 200;
 export const SHIELD_DURATION = 1000;
+
+export const TOMATO_WIDTH = 40;
+export const TOMATO_HEIGHT = 40;
+export const BASE_TOMATO_FALL_SPEED = 7.0;
+export const MAX_TOMATO_FALL_SPEED = 40.0;

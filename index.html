@@ -12,11 +12,46 @@
   <div id="canvasContainer">
     <canvas id="gameCanvas" width="400" height="590"></canvas>
   </div>
+  <img id="shopIcon" src="assets/shop-icon.png" alt="Shop" />
   <div id="gameOver" style="display: none;">
-    <p>Game Over</p>
+    <div id="gameOverHeader">
+      <p>Game Over</p>
+    </div>
     <p id="score">Score: </p>
     <p id="bestScore">Best: </p>
     <button id="resetButton">Reset</button>
+  </div>
+  <div id="shopContainer" style="display: none;">
+    <div id="shopHeader">
+      <h2>Shop</h2>
+      <button id="closeShop">Close</button>
+    </div>
+    <div class="shop-grid">
+      <div class="shop-item">
+        <img src="assets/snail-default.png" alt="Skin 1" />
+        <p>Skin 1 - 50 coins</p>
+      </div>
+      <div class="shop-item">
+        <img src="assets/snail-white.png" alt="Skin 1" />
+        <p>Skin 1 - 50 coins</p>
+      </div>
+      <div class="shop-item">
+        <img src="assets/snail-pink.png" alt="Skin 2" />
+        <p>Skin 2 - 75 coins</p>
+      </div>
+      <div class="shop-item">
+        <img src="assets/snail-disco.png" alt="Skin 3" />
+        <p>Skin 3 - 100 coins</p>
+      </div>
+      <div class="shop-item">
+        <img src="assets/background1.png" alt="BG 1" />
+        <p>BG 1 - 40 coins</p>
+      </div>
+      <div class="shop-item">
+        <img src="assets/background2.png" alt="BG 2" />
+        <p>BG 2 - 60 coins</p>
+      </div>
+    </div>
   </div>
   <script type="module" src="js/game.js"></script>
 </body>
