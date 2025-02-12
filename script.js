@@ -161,9 +161,8 @@
   function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = 'white';
-    ctx.font = '24px Arial';
-    ctx.fillText('' + score, 10, 30);
-    ctx.fillText('' + bestScore, 10, 60);
+    ctx.font = '42px Warmonger';
+    ctx.fillText('' + score, 10, 45);
     let now = Date.now();
     let spawnDelay = Math.max(170, 400 - score * 1.9);
     if (now - lastSpawnTime > spawnDelay) {
