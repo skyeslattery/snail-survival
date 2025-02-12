@@ -1,4 +1,3 @@
-// js/enemy.js
 import { ENEMY_SPECIAL_SIZE, ENEMY_DEFAULT_WIDTH, ENEMY_DEFAULT_HEIGHT, BASE_ENEMY_FALL_SPEED, MAX_ENEMY_FALL_SPEED } from './constants.js';
 
 export let enemies = [];
@@ -51,11 +50,11 @@ export function resetEnemies() {
   enemies = [];
 }
 
-export function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2) {
+export function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2, tolerance) {
   return (
-    x1 < x2 + w2 &&
-    x1 + w1 > x2 &&
-    y1 < y2 + h2 &&
-    y1 + h1 > y2
+    x1 + tolerance < x2 + w2 &&
+    x1 + w1 - tolerance > x2 &&
+    y1 + tolerance < y2 + h2 &&
+    y1 + h1 - tolerance > y2
   );
 }

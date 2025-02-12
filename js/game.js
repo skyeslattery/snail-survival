@@ -1,5 +1,4 @@
-// js/game.js
-import { CANVAS_WIDTH, CANVAS_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT, ICON_SIZE, ICON_MARGIN, DASH_COOLDOWN, SHIELD_COOLDOWN, DASH_DURATION, SHIELD_DURATION } from './constants.js';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT, ICON_MARGIN, DASH_COOLDOWN, SHIELD_COOLDOWN, DASH_DURATION, SHIELD_DURATION, TOLERANCE, DASH_WIDTH, SHIELD_WIDTH, DASH_HEIGHT, SHIELD_HEIGHT } from './constants.js';
 import { updatePlayerPosition, updatePlayerVelocity, getPlayerX, setPlayerX, isFacingLeft, resetPlayer } from './player.js';
 import { spawnEnemy, updateEnemyPositions, enemies, resetEnemies, checkCollision } from './enemy.js';
 import { drawIconWithRecharge, drawScore } from './ui.js';
@@ -14,13 +13,12 @@ let alive = true;
 let lastSpawnTime = Date.now();
 
 let dashReady = true;
+let dashActive = false;
 let shieldReady = true;
 let dashLastUsed = 0;
 let shieldLastUsed = 0;
-let dashActive = false;
 let shieldActive = false;
 
-// Load images
 const snailImage = new Image();
 snailImage.src = 'assets/snail-default.png';
 const birdImage = new Image();
@@ -32,7 +30,6 @@ dashIcon.src = 'assets/dash-icon.png';
 const shieldIcon = new Image();
 shieldIcon.src = 'assets/shield-icon.png';
 
-// Set up input listeners
 setupInputListeners();
 
 function drawEnemy(enemy) {
@@ -91,7 +88,6 @@ function gameLoop() {
     for (const enemy of enemies) {
       drawEnemy(enemy);
     }
-    // Update enemy positions and add to score for each enemy that leaves the screen
     const removedCount = updateEnemyPositions(CANVAS_HEIGHT);
     score += removedCount;
 
@@ -114,29 +110,19 @@ function gameLoop() {
       if (
         alive &&
         !shieldActive &&
-        checkCollision(getPlayerX(), CANVAS_HEIGHT - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT, enemy.x, enemy.y, enemy.width, enemy.height)
+        checkCollision(getPlayerX(), CANVAS_HEIGHT - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT, enemy.x, enemy.y, enemy.width, enemy.height, TOLERANCE)
       ) {
         gameOver();
         return;
       }
     }
+    updatePlayerVelocity(isLeftPressed, isRightPressed, alive, dashActive);
     updatePlayerPosition();
-    updatePlayerVelocity(isLeftPressed, isRightPressed, alive);
     if (dashTriggered && dashReady) {
       dashReady = false;
       dashLastUsed = Date.now();
-      const dashDistance = 100;
-      if (isLeftPressed) {
-        setPlayerX(getPlayerX() - dashDistance);
-      } else if (isRightPressed) {
-        setPlayerX(getPlayerX() + dashDistance);
-      } else {
-        setPlayerX(getPlayerX() + dashDistance);
-      }
-      if (getPlayerX() < 0) setPlayerX(0);
-      if (getPlayerX() > CANVAS_WIDTH - PLAYER_WIDTH) setPlayerX(CANVAS_WIDTH - PLAYER_WIDTH);
       dashActive = true;
-      setTimeout(() => { dashActive = false; }, DASH_DURATION);
+      setTimeout(() => { dashActive = false; }, 1500);
       setTimeout(() => { dashReady = true; }, DASH_COOLDOWN);
     }
     if (shieldTriggered && shieldReady) {
@@ -148,12 +134,12 @@ function gameLoop() {
     }
     let dashProgress = Math.min((Date.now() - dashLastUsed) / DASH_COOLDOWN, 1);
     let shieldProgress = Math.min((Date.now() - shieldLastUsed) / SHIELD_COOLDOWN, 1);
-    let dashX = CANVAS_WIDTH - ICON_SIZE - ICON_MARGIN;
+    let dashX = CANVAS_WIDTH - DASH_WIDTH - ICON_MARGIN;
     let dashY = ICON_MARGIN;
-    let shieldX = CANVAS_WIDTH - ICON_SIZE - ICON_MARGIN;
-    let shieldY = ICON_MARGIN + ICON_SIZE + ICON_MARGIN + 4;
-    drawIconWithRecharge(ctx, dashX, dashY, dashIcon, dashProgress);
-    drawIconWithRecharge(ctx, shieldX, shieldY, shieldIcon, shieldProgress);
+    let shieldX = CANVAS_WIDTH - SHIELD_WIDTH - ICON_MARGIN;
+    let shieldY = ICON_MARGIN + DASH_HEIGHT + ICON_MARGIN + 15;
+    drawIconWithRecharge(ctx, dashX, dashY, dashIcon, dashProgress, DASH_WIDTH, DASH_HEIGHT);
+    drawIconWithRecharge(ctx, shieldX, shieldY, shieldIcon, shieldProgress, SHIELD_WIDTH, SHIELD_HEIGHT);
     animationId = requestAnimationFrame(gameLoop);
   }
 }

@@ -1,4 +1,3 @@
-// js/player.js
 import { CANVAS_WIDTH, PLAYER_WIDTH, ACCELERATION, MAX_SPEED } from './constants.js';
 
 let playerX = CANVAS_WIDTH / 2 - PLAYER_WIDTH / 2;
@@ -11,21 +10,26 @@ export function updatePlayerPosition() {
   else if (playerX > CANVAS_WIDTH - PLAYER_WIDTH) playerX = CANVAS_WIDTH - PLAYER_WIDTH;
 }
 
-export function updatePlayerVelocity(isLeftPressed, isRightPressed, alive) {
+export function updatePlayerVelocity(isLeftPressed, isRightPressed, alive, dashActive) {
   if (!alive) {
     playerVelocityX = 0;
     return;
   }
+  let baseVelocity = 0;
   if (isLeftPressed && !isRightPressed) {
-    playerVelocityX = -ACCELERATION;
+    baseVelocity = -ACCELERATION;
     facingLeft = true;
   } else if (!isLeftPressed && isRightPressed) {
-    playerVelocityX = ACCELERATION;
+    baseVelocity = ACCELERATION;
     facingLeft = false;
   } else {
-    playerVelocityX = 0;
+    baseVelocity = 0;
   }
-  playerVelocityX = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, playerVelocityX));
+  baseVelocity = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, baseVelocity));
+  if (dashActive) {
+    baseVelocity *= 2;
+  }
+  playerVelocityX = baseVelocity;
 }
 
 export function getPlayerX() {

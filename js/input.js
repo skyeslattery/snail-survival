@@ -1,4 +1,3 @@
-// js/input.js
 export let isLeftPressed = false;
 export let isRightPressed = false;
 export let dashTriggered = false;
