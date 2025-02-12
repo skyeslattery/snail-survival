@@ -6,7 +6,7 @@
   "author": "Skye Slattery",
   "action": {
     "default_popup": "index.html",
-    "default_icon": "icon128.png",
+    "default_icon": "assets/icon128.png",
     "default_title": "Snail Survival"
   },
   "icons": {

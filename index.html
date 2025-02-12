@@ -2,25 +2,23 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snail Survival</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <div id="canvasContainer">
     <canvas id="gameCanvas" width="400" height="590"></canvas>
   </div>
-  <div id="player"></div>
   <div id="gameOver" style="display: none;">
     <p>Game Over</p>
     <p id="score">Score: </p>
     <p id="bestScore">Best: </p>
     <button id="resetButton">Reset</button>
   </div>
-  <script src="script.js"></script>
+  <script type="module" src="js/game.js"></script>
 </body>
 
 </html>
