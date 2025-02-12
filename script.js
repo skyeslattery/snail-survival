@@ -4,11 +4,12 @@
 
   const CANVAS_WIDTH = canvas.width;
   const CANVAS_HEIGHT = canvas.height;
-  const PLAYER_WIDTH = 40;
-  const PLAYER_HEIGHT = 30;
-  const ENEMY_DEFAULT_SIZE = 35;
+  const PLAYER_WIDTH = 50;
+  const PLAYER_HEIGHT = 27.5;
+  const ENEMY_DEFAULT_HEIGHT = 31;
+  const ENEMY_DEFAULT_WIDTH = 42;
   const ENEMY_SPECIAL_SIZE = 60;
-  const baseEnemyFallSpeed = 10.0;
+  const baseEnemyFallSpeed = 7.0;
   const maxEnemyFallSpeed = 40.0;
   const acceleration = 4.0;
   const maxSpeed = 10.0;
@@ -19,12 +20,10 @@
   let score = 0;
   let bestScore = Number(localStorage.getItem('bestScore')) || 0;
   let alive = true;
+  let facingLeft = false;
 
-  const snailLeft = new Image();
-  snailLeft.src = 'assets/snailLeft.png';
-  const snailRight = new Image();
-  snailRight.src = 'assets/snailRight.png';
-  let currentImage = snailRight;
+  const snailImage = new Image();
+  snailImage.src = 'assets/snail-default.png';
 
   const birdImage = new Image();
   birdImage.src = 'assets/bird1.png';
@@ -48,7 +47,7 @@
   const shieldDuration = 1000;
 
   function spawnEnemy() {
-    const enemyFallSpeed = Math.min(baseEnemyFallSpeed + score * 0.1, maxEnemyFallSpeed);
+    const enemyFallSpeed = Math.min(baseEnemyFallSpeed + score * 0.05, maxEnemyFallSpeed);
     let enemy;
     if (score > 20 && score % 10 === 0) {
       enemy = {
@@ -61,10 +60,10 @@
       };
     } else {
       enemy = {
-        x: Math.random() * (CANVAS_WIDTH - ENEMY_DEFAULT_SIZE) - (0.5 * ENEMY_DEFAULT_SIZE),
+        x: Math.random() * (CANVAS_WIDTH - ENEMY_DEFAULT_WIDTH) - (0.5 * ENEMY_DEFAULT_WIDTH),
         y: 0,
-        width: ENEMY_DEFAULT_SIZE,
-        height: ENEMY_DEFAULT_SIZE,
+        width: ENEMY_DEFAULT_WIDTH,
+        height: ENEMY_DEFAULT_HEIGHT,
         velocityY: enemyFallSpeed,
         image: birdImage
       };
@@ -127,10 +126,10 @@
     }
     if (isLeftPressed && !isRightPressed) {
       playerVelocityX = -acceleration;
-      currentImage = snailLeft;
+      facingLeft = true;
     } else if (!isLeftPressed && isRightPressed) {
       playerVelocityX = acceleration;
-      currentImage = snailRight;
+      facingLeft = false;
     } else {
       playerVelocityX = 0;
     }
@@ -161,10 +160,10 @@
 
   function draw() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'white';
     ctx.font = '24px Arial';
-    ctx.fillText('Score: ' + score, 10, 30);
-    ctx.fillText('Best Score: ' + bestScore, 10, 60);
+    ctx.fillText('' + score, 10, 30);
+    ctx.fillText('' + bestScore, 10, 60);
     let now = Date.now();
     let spawnDelay = Math.max(170, 400 - score * 1.9);
     if (now - lastSpawnTime > spawnDelay) {
@@ -175,12 +174,19 @@
       for (const enemy of enemies) {
         ctx.drawImage(enemy.image, enemy.x, enemy.y, enemy.width, enemy.height);
       }
-      ctx.drawImage(currentImage, playerX, playerY - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
+      if (facingLeft) {
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(snailImage, -playerX - PLAYER_WIDTH, playerY - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
+        ctx.restore();
+      } else {
+        ctx.drawImage(snailImage, playerX, playerY - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT);
+      }
       if (shieldActive) {
         ctx.beginPath();
         ctx.arc(playerX + PLAYER_WIDTH / 2, playerY - PLAYER_HEIGHT / 2, PLAYER_WIDTH, 0, Math.PI * 2);
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
         ctx.stroke();
       }
       updatePlayerPosition();
