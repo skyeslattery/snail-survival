@@ -6,13 +6,16 @@
   const CANVAS_HEIGHT = canvas.height;
   const PLAYER_WIDTH = 50;
   const PLAYER_HEIGHT = 27.5;
-  const ENEMY_DEFAULT_HEIGHT = 31;
   const ENEMY_DEFAULT_WIDTH = 42;
+  const ENEMY_DEFAULT_HEIGHT = 31;
   const ENEMY_SPECIAL_SIZE = 60;
   const baseEnemyFallSpeed = 7.0;
   const maxEnemyFallSpeed = 40.0;
   const acceleration = 4.0;
   const maxSpeed = 10.0;
+
+  const ICON_SIZE = 40;
+  const ICON_MARGIN = 25;
 
   let playerX = CANVAS_WIDTH / 2 - PLAYER_WIDTH / 2;
   const playerY = CANVAS_HEIGHT;
@@ -30,6 +33,11 @@
   const birdImage2 = new Image();
   birdImage2.src = 'assets/bird2.png';
 
+  const dashIcon = new Image();
+  dashIcon.src = 'assets/dash-icon.png';
+  const shieldIcon = new Image();
+  shieldIcon.src = 'assets/shield-icon.png';
+
   const enemies = [];
   let animationId;
   let lastSpawnTime = Date.now();
@@ -45,6 +53,8 @@
   const shieldCooldown = 30000;
   const dashDuration = 200;
   const shieldDuration = 1000;
+  let dashLastUsed = 0;
+  let shieldLastUsed = 0;
 
   function spawnEnemy() {
     const enemyFallSpeed = Math.min(baseEnemyFallSpeed + score * 0.05, maxEnemyFallSpeed);
@@ -58,6 +68,7 @@
         velocityY: enemyFallSpeed,
         image: birdImage2
       };
+      enemy.velocityX = enemy.x < CANVAS_WIDTH / 2 ? enemyFallSpeed / 6 : -enemyFallSpeed / 6;
     } else {
       enemy = {
         x: Math.random() * (CANVAS_WIDTH - ENEMY_DEFAULT_WIDTH) - (0.5 * ENEMY_DEFAULT_WIDTH),
@@ -75,6 +86,9 @@
     for (let i = 0; i < enemies.length; i++) {
       const enemy = enemies[i];
       enemy.y += enemy.velocityY;
+      if (enemy.velocityX) {
+        enemy.x += enemy.velocityX;
+      }
       if (enemy.y > CANVAS_HEIGHT) {
         enemies.splice(i, 1);
         i--;
@@ -138,12 +152,19 @@
 
   function gameOver() {
     cancelAnimationFrame(animationId);
+    dashLastUsed = 0;
+    shieldLastUsed = 0;
+    dashReady = true;
+    shieldReady = true;
+
     const gameOverElement = document.getElementById('gameOver');
     gameOverElement.style.display = 'block';
     const scoreElement = document.getElementById('score');
     scoreElement.innerHTML = 'Score: ' + score;
     bestScore = Math.max(bestScore, score);
     localStorage.setItem('bestScore', bestScore);
+    const bestScoreElement = document.getElementById('bestScore');
+    bestScoreElement.innerHTML = 'Best: ' + bestScore;
   }
 
   function resetGame() {
@@ -156,6 +177,18 @@
     const gameOverElement = document.getElementById('gameOver');
     gameOverElement.style.display = 'none';
     animationId = requestAnimationFrame(draw);
+  }
+
+  function drawIconWithRecharge(x, y, icon, progress) {
+    let centerX = x + ICON_SIZE / 2;
+    let centerY = y + ICON_SIZE / 2;
+    let radius = ICON_SIZE / 2 + 12;
+    ctx.beginPath();
+    ctx.arc(centerX - 1, centerY, radius, -Math.PI / 2, -Math.PI / 2 + progress * 2 * Math.PI, false);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "lightgray";
+    ctx.stroke();
+    ctx.drawImage(icon, centerX - ICON_SIZE / 2, centerY - ICON_SIZE / 2, ICON_SIZE, ICON_SIZE);
   }
 
   function draw() {
@@ -190,6 +223,16 @@
       }
       updatePlayerPosition();
       updateEnemies();
+
+      let dashProgress = Math.min((Date.now() - dashLastUsed) / dashCooldown, 1);
+      let shieldProgress = Math.min((Date.now() - shieldLastUsed) / shieldCooldown, 1);
+      let dashX = CANVAS_WIDTH - ICON_SIZE - ICON_MARGIN;
+      let dashY = ICON_MARGIN;
+      let shieldX = CANVAS_WIDTH - ICON_SIZE - ICON_MARGIN;
+      let shieldY = ICON_MARGIN + ICON_SIZE + ICON_MARGIN + 4;
+      drawIconWithRecharge(dashX, dashY, dashIcon, dashProgress);
+      drawIconWithRecharge(shieldX, shieldY, shieldIcon, shieldProgress);
+
       animationId = requestAnimationFrame(draw);
     }
   }
@@ -201,6 +244,7 @@
       isRightPressed = true;
     } else if (event.code === 'KeyZ' && dashReady) {
       dashReady = false;
+      dashLastUsed = Date.now();
       const dashDistance = 100;
       if (isLeftPressed) {
         playerX -= dashDistance;
@@ -216,6 +260,7 @@
       setTimeout(() => { dashReady = true; }, dashCooldown);
     } else if (event.code === 'KeyX' && shieldReady) {
       shieldReady = false;
+      shieldLastUsed = Date.now();
       shieldActive = true;
       setTimeout(() => { shieldActive = false; }, shieldDuration);
       setTimeout(() => { shieldReady = true; }, shieldCooldown);
