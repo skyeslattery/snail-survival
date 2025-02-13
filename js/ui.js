@@ -4,7 +4,7 @@ export function drawIconWithRecharge(ctx, x, y, icon, progress, iconWidth, iconH
   let radius = Math.max(iconWidth, iconHeight) / 2 + 12;
   ctx.beginPath();
   ctx.arc(centerX - 1, centerY, radius, -Math.PI / 2, -Math.PI / 2 + progress * 2 * Math.PI, false);
-  ctx.lineWidth = 2;
+  ctx.lineWidth = 3;
   ctx.strokeStyle = "lightgray";
   ctx.stroke();
   ctx.drawImage(icon, x, y, iconWidth, iconHeight);

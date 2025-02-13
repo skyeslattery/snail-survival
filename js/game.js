@@ -21,7 +21,6 @@ import {
   updatePlayerPosition,
   updatePlayerVelocity,
   getPlayerX,
-  setPlayerX,
   isFacingLeft,
   resetPlayer
 } from './player.js';
@@ -40,6 +39,7 @@ import {
   shieldTriggered,
   setupInputListeners
 } from './input.js';
+import { setupShop } from './shop.js';
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -47,7 +47,7 @@ const ctx = canvas.getContext('2d');
 let score = 0;
 let bestScore = Number(localStorage.getItem('bestScore')) || 0;
 let alive = true;
-let lastSpawnTime = Date.now();
+let nextEnemySpawnTime = Date.now() + getRandomSpawnDelay();
 
 let dashReady = true;
 let dashActive = false;
@@ -55,8 +55,11 @@ let shieldReady = true;
 let dashLastUsed = 0;
 let shieldLastUsed = 0;
 let shieldActive = false;
+let lastSpawnTime = Date.now();
+let lastTime = performance.now();
 
 let tomatoCount = Number(localStorage.getItem('tomatoCount')) || 0;
+updateTomatoDisplay(); 
 let tomatoes = [];
 
 const snailImage = new Image();
@@ -72,7 +75,34 @@ shieldIcon.src = 'assets/shield-icon.png';
 const tomatoImage = new Image();
 tomatoImage.src = 'assets/tomato.png';
 
+if (!localStorage.getItem('ownedSkins')) {
+  localStorage.setItem('ownedSkins', JSON.stringify(['assets/snail-default.png']));
+}
+if (!localStorage.getItem('ownedBackgrounds')) {
+  localStorage.setItem('ownedBackgrounds', JSON.stringify(['assets/background2.png']));
+}
+
+if (!localStorage.getItem('currentSkin')) {
+  localStorage.setItem('currentSkin', 'assets/snail-default.png');
+}
+const currentSkin = localStorage.getItem('currentSkin');
+snailImage.src = currentSkin;
+
+if (!localStorage.getItem('currentBackground')) {
+  localStorage.setItem('currentBackground', 'assets/background2.png');
+}
+const currentBackground = localStorage.getItem('currentBackground');
+document.getElementById('canvasContainer').style.backgroundImage = `url(${currentBackground})`;
+
 setupInputListeners();
+setupShop();
+
+document.addEventListener('skinPurchased', e => {
+  snailImage.src = e.detail;
+});
+document.addEventListener('backgroundPurchased', e => {
+  document.getElementById('canvasContainer').style.backgroundImage = `url(${e.detail})`;
+});
 
 function drawEnemy(enemy) {
   if (enemy.imageType === 'special') {
@@ -83,7 +113,8 @@ function drawEnemy(enemy) {
 }
 
 function spawnTomato(canvasWidth) {
-  const tomatoSpeed = Math.min(BASE_ENEMY_FALL_SPEED + score * 0.05, MAX_ENEMY_FALL_SPEED);
+  // match enemy fall speed
+  const tomatoSpeed =Math.min(BASE_ENEMY_FALL_SPEED + Math.log(score / 10 + 1) * 2, MAX_ENEMY_FALL_SPEED);
   const tomato = {
     x: Math.random() * (canvasWidth - 20),
     y: 0,
@@ -92,6 +123,17 @@ function spawnTomato(canvasWidth) {
     velocityY: tomatoSpeed
   };
   tomatoes.push(tomato);
+}
+
+export function updateTomatoDisplay() {
+  const updatedTomatoCount = Number(localStorage.getItem('tomatoCount')) || 0;
+  document.getElementById('tomatoCountDisplay').textContent = updatedTomatoCount;
+}
+
+function getRandomSpawnDelay() {
+  const baseDelay = Math.max(170, 400 - score * .75);
+  const randomFactor = 0.5 + Math.random() * 2;
+  return baseDelay * randomFactor;
 }
 
 function gameOver() {
@@ -132,14 +174,18 @@ document.getElementById('resetButton').addEventListener('click', resetGame);
 
 let animationId;
 function gameLoop() {
+  let now = Date.now();
+  const dt = (now - lastTime) / 1000 * 60;
+  lastTime = now;
   ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   drawScore(ctx, score);
-  let now = Date.now();
-  let spawnDelay = Math.max(170, 400 - score * 1.9);
-  if (now - lastSpawnTime > spawnDelay) {
+  
+
+  if (now > nextEnemySpawnTime) {
     spawnEnemy(score, CANVAS_WIDTH);
-    lastSpawnTime = now;
-    if (Math.random() < 0.015) {
+    nextEnemySpawnTime = now + getRandomSpawnDelay();
+    
+    if (Math.random() < .5) {
       spawnTomato(CANVAS_WIDTH);
     }
   }
@@ -147,7 +193,7 @@ function gameLoop() {
     for (const enemy of enemies) {
       drawEnemy(enemy);
     }
-    const removedCount = updateEnemyPositions(CANVAS_HEIGHT);
+    const removedCount = updateEnemyPositions(CANVAS_HEIGHT, dt);
     score += removedCount;
 
     if (isFacingLeft()) {
@@ -178,8 +224,8 @@ function gameLoop() {
       }
     }
 
-    updatePlayerVelocity(isLeftPressed, isRightPressed, alive, dashActive);
-    updatePlayerPosition();
+    updatePlayerVelocity(isLeftPressed, isRightPressed, alive, dashActive, dt);
+    updatePlayerPosition(dt);
 
     if (dashTriggered && dashReady) {
       dashReady = false;
@@ -208,7 +254,7 @@ function gameLoop() {
 
     for (let i = 0; i < tomatoes.length; i++) {
       let tomato = tomatoes[i];
-      tomato.y += tomato.velocityY;
+      tomato.y += tomato.velocityY * dt;
       ctx.drawImage(tomatoImage, tomato.x, tomato.y, tomato.width, tomato.height);
       if (tomato.y > CANVAS_HEIGHT) {
         tomatoes.splice(i, 1);
@@ -218,18 +264,11 @@ function gameLoop() {
       if (checkCollision(getPlayerX(), CANVAS_HEIGHT - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT, tomato.x, tomato.y, tomato.width, tomato.height, 0)) {
         tomatoCount++;
         localStorage.setItem('tomatoCount', tomatoCount);
+        updateTomatoDisplay();
         tomatoes.splice(i, 1);
         i--;
       }
     }
-
-    const tomatoIconSize = 25;
-    const tomatoIconX = 10;
-    const tomatoIconY = 60;
-    ctx.drawImage(tomatoImage, tomatoIconX, tomatoIconY, tomatoIconSize, tomatoIconSize);
-    ctx.fillStyle = "white";
-    ctx.font = "28px Warmonger";
-    ctx.fillText(tomatoCount, tomatoIconX + tomatoIconSize + 5, tomatoIconY + tomatoIconSize - 5);
 
     animationId = requestAnimationFrame(gameLoop);
   }

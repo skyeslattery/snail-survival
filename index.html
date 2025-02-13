@@ -13,6 +13,18 @@
     <canvas id="gameCanvas" width="400" height="590"></canvas>
   </div>
   <img id="shopIcon" src="assets/shop-icon.png" alt="Shop" />
+  <div id="tomatoCounter" style="
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    font: 28px Warmonger;
+    color: white;
+  ">
+  <img id="tomatoImage" src="assets/tomato.png" style="width: 25px; height: 25px; margin-right: 5px;">
+  <span id="tomatoCountDisplay">0</span>
+</div>
   <div id="gameOver" style="display: none;">
     <div id="gameOverHeader">
       <p>Game Over</p>
@@ -29,27 +41,33 @@
     <div class="shop-grid">
       <div class="shop-item">
         <img src="assets/snail-default.png" alt="Skin 1" />
-        <p>Skin 1 - 50 coins</p>
+        <p style="display: inline; position: relative; top: 5px;">2   </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/snail-white.png" alt="Skin 1" />
-        <p>Skin 1 - 50 coins</p>
+        <img src="assets/snail-white.png" alt="Skin 2" />
+        <p style="display: inline; position: relative; top: 5px;">15   </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/snail-pink.png" alt="Skin 2" />
-        <p>Skin 2 - 75 coins</p>
+        <img src="assets/snail-pink.png" alt="Skin 3" />
+        <p style="display: inline; position: relative; top: 5px;">25   </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/snail-disco.png" alt="Skin 3" />
-        <p>Skin 3 - 100 coins</p>
+        <img src="assets/snail-disco.png" alt="Skin 4" />
+        <p style="display: inline; position: relative; top: 5px;">50   </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/background1.png" alt="BG 1" />
-        <p>BG 1 - 40 coins</p>
+        <img src="assets/background2.png" alt="BG 1" />
+        <p style="display: inline; position: relative; top: 5px;">0  </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/background2.png" alt="BG 2" />
-        <p>BG 2 - 60 coins</p>
+        <img src="assets/background1.png" alt="BG 2" />
+        <p style="display: inline; position: relative; top: 5px;">30  </p>
+        <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
     </div>
   </div>

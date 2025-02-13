@@ -16,10 +16,9 @@ body {
 canvas {
   display: block;
   margin: 0 auto;
-  background-image: url('assets/background2.png');
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: transparent;
 }
 
 #overlay {
@@ -127,6 +126,13 @@ canvas {
   height: auto;
   display: block;
   margin: 0 auto 5px;
+}
+
+.shop-item.owned {
+  border-color: #0f0;
+}
+.shop-item.applied {
+  background-color: rgba(0, 255, 0, 0.15);
 }
 
 .shop-item p {

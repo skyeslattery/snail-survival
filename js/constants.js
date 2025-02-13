@@ -9,11 +9,11 @@ export const ENEMY_DEFAULT_HEIGHT = 31;
 export const ENEMY_SPECIAL_SIZE = 60;
 export const TOLERANCE = 10;
 
-export const BASE_ENEMY_FALL_SPEED = 7.0;
-export const MAX_ENEMY_FALL_SPEED = 40.0;
+export const BASE_ENEMY_FALL_SPEED = 5.0;
+export const MAX_ENEMY_FALL_SPEED = 17.0;
 
-export const ACCELERATION = 4.0;
-export const MAX_SPEED = 10.0;
+export const ACCELERATION = 3.0;
+export const MAX_SPEED = 4.0;
 
 export const SHIELD_WIDTH = 31;
 export const SHIELD_HEIGHT = 40;

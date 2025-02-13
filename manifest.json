@@ -10,6 +10,6 @@
     "default_title": "Snail Survival"
   },
   "icons": {
-    "128": "icon128.png"
+    "128": "assets/icon128.png"
   }
 }
