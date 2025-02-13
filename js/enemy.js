@@ -8,7 +8,7 @@ import {
 
 export let enemies = [];
 
-// Module-level flag to track if the last enemy spawned was special.
+// flag to check if the last enemy was special
 let lastEnemyWasSpecial = false;
 
 export function spawnEnemy(score, canvasWidth) {
@@ -18,7 +18,6 @@ export function spawnEnemy(score, canvasWidth) {
   
   let enemy;
   
-  // Only spawn a special enemy if the score qualifies and the previous enemy wasn't special.
   if (score > 20 && score % 10 === 0 && !lastEnemyWasSpecial) {
     enemy = {
       x: Math.random() * (canvasWidth - ENEMY_SPECIAL_SIZE) - (0.5 * ENEMY_SPECIAL_SIZE),
@@ -29,10 +28,9 @@ export function spawnEnemy(score, canvasWidth) {
       imageType: 'special'
     };
 
-    // Swoop effect: move horizontally toward the center.
+    // swoop effect
     enemy.velocityX = enemy.x < canvasWidth / 2 ? enemyFallSpeed / 6 : -enemyFallSpeed / 6;
     
-    // Mark that the last enemy was special.
     lastEnemyWasSpecial = true;
   } else {
     enemy = {
@@ -44,7 +42,6 @@ export function spawnEnemy(score, canvasWidth) {
       imageType: 'default'
     };
     
-    // Reset the flag when spawning a default enemy.
     lastEnemyWasSpecial = false;
   }
   

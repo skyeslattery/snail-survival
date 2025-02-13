@@ -1,21 +1,18 @@
 import { updateTomatoDisplay } from './game.js';
 export function setupShop() {
   const shopItems = document.querySelectorAll('.shop-item');
-  // Retrieve persistent ownership data
   let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || [];
   let ownedBackgrounds = JSON.parse(localStorage.getItem('ownedBackgrounds')) || [];
   
   shopItems.forEach(item => {
-    const imgElement = item.querySelector('img'); // product image
+    const imgElement = item.querySelector('img');
     const imgSrc = imgElement.getAttribute('src');
     const costElem = item.querySelector('p');
-    // Assuming the tomato icon is the second image in the shop-item
     const tomatoIconElem = item.querySelectorAll('img')[1];
     const priceText = costElem.innerText;
     const priceMatch = priceText.match(/(\d+)/);
     const price = priceMatch ? parseInt(priceMatch[1]) : 0;
     
-    // Determine type based on image source.
     let type = '';
     if (imgSrc.includes('snail')) {
       type = 'skin';
@@ -25,7 +22,6 @@ export function setupShop() {
     item.dataset.type = type;
     item.classList.add(type);
     
-    // If already owned, mark as owned and hide cost and tomato icon.
     if ((type === 'skin' && ownedSkins.includes(imgSrc)) ||
         (type === 'background' && ownedBackgrounds.includes(imgSrc))) {
       item.classList.add('owned');
