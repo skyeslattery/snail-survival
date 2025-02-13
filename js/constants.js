@@ -13,7 +13,7 @@ export const BASE_ENEMY_FALL_SPEED = 5.0;
 export const MAX_ENEMY_FALL_SPEED = 17.0;
 
 export const ACCELERATION = 3.0;
-export const MAX_SPEED = 4.0;
+export const MAX_SPEED = 3.8;
 
 export const SHIELD_WIDTH = 31;
 export const SHIELD_HEIGHT = 40;

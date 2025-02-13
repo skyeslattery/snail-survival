@@ -69,7 +69,7 @@ export function updateEnemyPositions(canvasHeight, dt) {
 }
 
 export function resetEnemies() {
-  enemies = [];
+  enemies.length = 0;
 }
 
 export function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2, tolerance) {

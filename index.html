@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snail Survival</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -25,18 +28,19 @@
   <img id="tomatoImage" src="assets/tomato.png" style="width: 25px; height: 25px; margin-right: 5px;">
   <span id="tomatoCountDisplay">0</span>
 </div>
+  <div id="overlay"></div>  
   <div id="gameOver" style="display: none;">
     <div id="gameOverHeader">
       <p>Game Over</p>
     </div>
     <p id="score">Score: </p>
     <p id="bestScore">Best: </p>
-    <button id="resetButton">Reset</button>
+    <button id="resetButton">Play</button>
   </div>
   <div id="shopContainer" style="display: none;">
     <div id="shopHeader">
       <h2>Shop</h2>
-      <button id="closeShop">Close</button>
+      <button id="closeShop">x</button>
     </div>
     <div class="shop-grid">
       <div class="shop-item">
@@ -60,12 +64,12 @@
         <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/background2.png" alt="BG 1" />
+        <img src="assets/background1.png" alt="BG 1" />
         <p style="display: inline; position: relative; top: 5px;">0  </p>
         <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>
       <div class="shop-item">
-        <img src="assets/background1.png" alt="BG 2" />
+        <img src="assets/background2.png" alt="BG 2" />
         <p style="display: inline; position: relative; top: 5px;">30  </p>
         <img src="assets/tomato.png" alt="Tomato icon" style="width: 20px; height: 20px; display: inline; vertical-align: middle; position: relative; top: 5px;" />
       </div>

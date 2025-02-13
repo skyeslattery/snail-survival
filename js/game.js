@@ -79,7 +79,7 @@ if (!localStorage.getItem('ownedSkins')) {
   localStorage.setItem('ownedSkins', JSON.stringify(['assets/snail-default.png']));
 }
 if (!localStorage.getItem('ownedBackgrounds')) {
-  localStorage.setItem('ownedBackgrounds', JSON.stringify(['assets/background2.png']));
+  localStorage.setItem('ownedBackgrounds', JSON.stringify(['assets/background1.png']));
 }
 
 if (!localStorage.getItem('currentSkin')) {
@@ -89,7 +89,7 @@ const currentSkin = localStorage.getItem('currentSkin');
 snailImage.src = currentSkin;
 
 if (!localStorage.getItem('currentBackground')) {
-  localStorage.setItem('currentBackground', 'assets/background2.png');
+  localStorage.setItem('currentBackground', 'assets/background1.png');
 }
 const currentBackground = localStorage.getItem('currentBackground');
 document.getElementById('canvasContainer').style.backgroundImage = `url(${currentBackground})`;
@@ -143,6 +143,9 @@ function gameOver() {
   dashReady = true;
   shieldReady = true;
   alive = false;
+  const overlay = document.getElementById('overlay');
+  overlay.classList.add('active');
+
   const gameOverElement = document.getElementById('gameOver');
   gameOverElement.style.display = 'block';
   const scoreElement = document.getElementById('score');
@@ -157,6 +160,7 @@ function gameOver() {
 function resetGame() {
   resetPlayer();
   resetEnemies();
+
   score = 0;
   alive = true;
   lastSpawnTime = Date.now();
@@ -164,8 +168,12 @@ function resetGame() {
   shieldLastUsed = 0;
   dashReady = true;
   shieldReady = true;
+
   const gameOverElement = document.getElementById('gameOver');
   gameOverElement.style.display = 'none';
+  const overlay = document.getElementById('overlay');
+  overlay.classList.remove('active');
+
   animationId = requestAnimationFrame(gameLoop);
   document.getElementById('shopIcon').style.display = 'none';
 }
@@ -185,7 +193,7 @@ function gameLoop() {
     spawnEnemy(score, CANVAS_WIDTH);
     nextEnemySpawnTime = now + getRandomSpawnDelay();
     
-    if (Math.random() < .5) {
+    if (Math.random() < .05) {
       spawnTomato(CANVAS_WIDTH);
     }
   }
@@ -251,6 +259,11 @@ function gameLoop() {
     let shieldY = ICON_MARGIN + DASH_HEIGHT + ICON_MARGIN + 15;
     drawIconWithRecharge(ctx, dashX, dashY, dashIcon, dashProgress, DASH_WIDTH, DASH_HEIGHT);
     drawIconWithRecharge(ctx, shieldX, shieldY, shieldIcon, shieldProgress, SHIELD_WIDTH, SHIELD_HEIGHT);
+    ctx.font = "12px 'Press Start 2P'";
+    ctx.fillStyle = "#eee";
+    ctx.textAlign = "center";
+    ctx.fillText("Z", dashX + DASH_WIDTH / 2, dashY + DASH_HEIGHT + 16);
+    ctx.fillText("X", shieldX + SHIELD_WIDTH / 2, shieldY + SHIELD_HEIGHT + 16);
 
     for (let i = 0; i < tomatoes.length; i++) {
       let tomato = tomatoes[i];

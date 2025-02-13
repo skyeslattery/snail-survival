@@ -1,3 +1,9 @@
+/* Global settings for pixel perfection */
+* {
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -5,12 +11,15 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #000;
+  font-family: 'Press Start 2P', serif;
+  color: black;
 }
 
 #canvasContainer {
-  border: 2px solid black;
+  border: 4px solid #bbb; /* Gray border around the whole screen */
   display: inline-block;
+  background-color: #10141d;
 }
 
 canvas {
@@ -22,12 +31,18 @@ canvas {
 }
 
 #overlay {
-  position: absolute;
+  display: none;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 998;
+}
+
+#overlay.active {
+  display: block;
 }
 
 #gameOver {
@@ -35,108 +50,130 @@ canvas {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(240, 240, 240, 0.75);
-  padding: 30px;
-  border: none;
-  border-radius: 2px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  background: #ebede9;
+  padding: 32px;
+  border: 3px solid #315531;  /* Accent border */
   text-align: center;
   z-index: 999;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #333;
 }
 
 #gameOver p {
-  margin: 10px 0;
-  font-size: 16px;
+  margin: 8px 0;
+  font-size: 12px;
 }
 
 #gameOver button {
-  margin-top: 20px;
-  padding: 10px 30px;
-  font-size: 16px;
-  background-color: #666;
+  margin-top: 16px;
+  padding: 8px 16px;
+  font-size: 12px;
+  background-color: #555;
   color: #eee;
-  border: none;
-  border-radius: 4px;
+  border: 2px solid #bbb;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  font-family: 'Press Start 2P', serif;
 }
 
 #gameOver button:hover {
-  background-color: #444;
+  background-color: #315531; /* Accent on hover */
+  border-color: #315531;
+}
+
+.shop-item:not(.applied):hover {
+  filter: brightness(0.9);
 }
 
 #shopIcon {
   display: none;
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   z-index: 1000;
+  transition: filter 0.2s ease;
 }
 
+#shopIcon:hover {
+  filter: brightness(0.8);
+}
+
+/* Shop Container now uses off-white with an accent border */
 #shopContainer {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(240, 240, 240, 0.95);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #ebede9;  /* Off-white background */
+  padding: 32px;
+  border: 3px solid #315531;  /* Accent border */
   z-index: 1000;
+  text-align: center;
 }
 
+/* Shop Header styled to match game over screen */
+/* Added flex styling to align the title with the X button */
 #shopHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  color: black;
+  font-size: 12px;
 }
 
+/* Close Shop Button styled similar to game over button */
 #closeShop {
-  padding: 5px 10px;
-  font-size: 14px;
-  background-color: #666;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: 'Press Start 2P', serif;
   color: #eee;
-  border: none;
-  border-radius: 4px;
+  background-color: #555;
   cursor: pointer;
+  border: 2px solid #bbb;
+  text-transform: uppercase;
 }
 
+#closeShop:hover {
+  background-color: #315531;
+  border-color: #315531;
+}
+
+/* Shop Grid & Items */
 .shop-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
+/* Lighter background for shop items to match the theme */
 .shop-item {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
+  background: #f5f5f5;
+  border: 2px solid #bbb;
+  padding: 8px;
   text-align: center;
-  border-radius: 4px;
+  color: black;
 }
 
 .shop-item img {
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto 5px;
+  margin: 0 auto 4px;
 }
 
 .shop-item.owned {
-  border-color: #0f0;
+  border-color: #315531; /* Accent for owned items */
 }
+
 .shop-item.applied {
-  background-color: rgba(0, 255, 0, 0.15);
+  background-color: rgba(49, 85, 49, 0.15); /* Accent variation */
 }
 
 .shop-item p {
   margin: 0;
-  font-size: 14px;
-  color: #333;
+  font-size: 10px;
+  color: black;
 }
